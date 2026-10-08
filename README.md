@@ -6,7 +6,7 @@ Kuis bahasa Indonesia untuk menghafal kode dan nama 100 produk. Situs statis unt
 
 - 100 soal isian: 50 menebak kode dan 50 menebak nama, diacak pada setiap sesi baru.
 - Nama yang sama pada beberapa kode selalu ditanyakan dari kode ke nama.
-- Durasi 30, 45, atau 60 menit, dengan 45 menit sebagai pilihan awal.
+- Durasi 10, 30, 45, atau 60 menit, dengan 45 menit sebagai pilihan awal.
 - Navigasi soal, penanda ragu-ragu, penyimpanan jawaban otomatis di browser.
 - Skor maksimal 100, pembahasan setelah selesai, dan unduhan hasil dalam TXT.
 - Perpindahan tab/aplikasi, hilangnya fokus jendela, keluar fullscreen, dan reload dicatat. Pelanggaran ketiga menyelesaikan percobaan otomatis.

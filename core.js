@@ -15,7 +15,7 @@
   }
   function createAttempt(bank, {now=Date.now(),minutes=45,id,random=Math.random}={}) {
     if(bank.length!==100 || new Set(bank.map(p=>p.code)).size!==100) throw new Error('Bank harus memuat 100 kode berbeda.');
-    if(![30,45,60].includes(minutes)) throw new Error('Durasi tidak valid.');
+    if(![10,30,45,60].includes(minutes)) throw new Error('Durasi tidak valid.');
     const safe=shuffle(bank.filter(p=>!p.ambiguousName),random);
     if(safe.length<50)throw new Error('Belum cukup nama produk yang unik.');
     const codeSet=new Set(safe.slice(0,50).map(p=>p.code));
