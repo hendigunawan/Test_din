@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#164f3d">
+  <meta name="description" content="Latihan 100 soal kode dan nama produk, nilai otomatis, dan mode fokus dengan pencatatan perpindahan halaman.">
+  <title>Latihan Kode Produk</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="products.js" defer></script>
+  <script src="core.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="./" aria-label="Latihan Kode Produk, beranda"><span class="brand-mark" aria-hidden="true">K</span><span>Latihan<span class="brand-light">Kode</span></span></a><span class="header-note">Hafalan produk, satu soal setiap langkah.</span></header>
+  <main id="app" tabindex="-1"><div class="loading"><span class="eyebrow">LATIHAN KODE PRODUK</span><h1>Menyiapkan soal…</h1><p>Memuat 100 produk untuk latihanmu.</p></div></main>
+  <footer><span>100 produk pilihan</span><span>Latihan pribadi · hasil tersimpan di perangkat ini</span></footer>
+  <dialog id="warning-dialog" aria-labelledby="warning-title" aria-describedby="warning-description"><div class="dialog-icon" aria-hidden="true">!</div><span class="eyebrow">MODE FOKUS</span><h2 id="warning-title">Kembali fokus, yuk.</h2><p id="warning-description"></p><p class="muted">Waktu tetap berjalan. Pada pelanggaran ketiga, ujian selesai otomatis.</p><button class="button primary wide" id="resume-button">Kembali ke ujian</button><p id="resume-error" class="error" role="status"></p></dialog>
+  <dialog id="submit-dialog" aria-labelledby="submit-title"><span class="eyebrow">SELESAIKAN LATIHAN</span><h2 id="submit-title">Kirim jawaban sekarang?</h2><p id="submit-description"></p><div class="dialog-actions"><button class="button secondary" id="cancel-submit">Periksa lagi</button><button class="button primary" id="confirm-submit">Ya, selesai</button></div></dialog>
+  <noscript><div class="notice">Aktifkan JavaScript untuk memulai kuis, menilai jawaban, dan memantau perpindahan halaman.</div></noscript>
+</body>
+</html>
