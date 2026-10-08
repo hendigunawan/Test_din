@@ -25,11 +25,11 @@ Buka `http://localhost:8765`. Untuk mencoba tanpa server, buka `index.html` lang
 
 ## GitHub Pages
 
-Repositori: [hendigunawan/Test_din](https://github.com/hendigunawan/Test_din). Semua file aplikasi berada di root branch `main`, termasuk `.nojekyll`.
+Repositori: [hendigunawan/Test_din](https://github.com/hendigunawan/Test_din). Semua file aplikasi berada di root branch `main`, termasuk `.nojekyll`. Versi publik berada di branch `gh-pages`; pembuatan branch ini sudah mengaktifkan GitHub Pages.
 
-1. Buka [**Settings → Pages**](https://github.com/hendigunawan/Test_din/settings/pages).
-2. Pilih **Deploy from a branch → main → / (root)**, lalu **Save**.
-3. Gunakan alamat situs yang ditampilkan GitHub setelah deployment selesai.
+Untuk memeriksa pengaturan, buka [**Settings → Pages**](https://github.com/hendigunawan/Test_din/settings/pages). Sumber publikasi adalah **Deploy from a branch → gh-pages → / (root)**. Alamat situs ditampilkan GitHub setelah deployment selesai.
+
+Untuk menerbitkan perubahan selanjutnya, perbarui `main`, lalu gabungkan perubahan tersebut ke `gh-pages`. Hanya perubahan pada `gh-pages` yang memperbarui situs publik.
 
 Dengan GitHub Free, Pages membutuhkan repositori public. Aturan akun/organisasi lain dapat berbeda. File produk di situs statis dapat dibaca oleh pengunjung.
 
