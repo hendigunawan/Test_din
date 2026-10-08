@@ -1,3 +1,4 @@
+// Kode dan nama: sudah dibenerin kode produk.xlsx, diperbarui 8 Oktober 2026.
 (function(root){const products=[
   {
     "code": "05001",
@@ -26,7 +27,7 @@
   },
   {
     "code": "04121",
-    "name": "DANISH COKELAT",
+    "name": "DANISH COKELAT BELEPOTAN",
     "ambiguousName": false
   },
   {
@@ -36,7 +37,7 @@
   },
   {
     "code": "01039",
-    "name": "ROTI KACANG MERAH",
+    "name": "ROTI KACANG MERAH SPECIAL",
     "ambiguousName": false
   },
   {
@@ -47,7 +48,7 @@
   {
     "code": "01508",
     "name": "ROTI SMEER MOCCA",
-    "ambiguousName": true
+    "ambiguousName": false
   },
   {
     "code": "03100",
@@ -106,7 +107,7 @@
   },
   {
     "code": "01007",
-    "name": "ROTI COKELAT MUISJES",
+    "name": "ROTI COKELAT MUISJES GULUNG",
     "ambiguousName": false
   },
   {
@@ -117,7 +118,7 @@
   {
     "code": "01023",
     "name": "ROTI KACANG HIJAU",
-    "ambiguousName": true
+    "ambiguousName": false
   },
   {
     "code": "05019",
@@ -196,7 +197,7 @@
   },
   {
     "code": "07008",
-    "name": "CHIFFON CAKE",
+    "name": "CHIFFON CAKE COKELAT",
     "ambiguousName": false
   },
   {
@@ -206,7 +207,7 @@
   },
   {
     "code": "03018",
-    "name": "KELAPA PANDAN",
+    "name": "KELAPA PANDAN PUDDING LOG",
     "ambiguousName": false
   },
   {
@@ -221,12 +222,12 @@
   },
   {
     "code": "01553",
-    "name": "SINGAPORE KAYA",
+    "name": "SINGAPORE KAYA TOAST",
     "ambiguousName": false
   },
   {
     "code": "01135",
-    "name": "ROTI COKELAT KEJU",
+    "name": "ROTI COKELAT KEJU SPECIAL",
     "ambiguousName": false
   },
   {
@@ -246,7 +247,7 @@
   },
   {
     "code": "06272",
-    "name": "JAPANESE",
+    "name": "JAPANESE CHEESE CAKE",
     "ambiguousName": false
   },
   {
@@ -296,18 +297,18 @@
   },
   {
     "code": "01011",
-    "name": "ROTI SMOKED BEEF",
-    "ambiguousName": true
+    "name": "ROTI SMOKED BEEF CHEESE",
+    "ambiguousName": false
   },
   {
     "code": "01146",
     "name": "ROTI MOCCA MESIS",
-    "ambiguousName": true
+    "ambiguousName": false
   },
   {
     "code": "04233",
-    "name": "PIA KHAS NYONYA",
-    "ambiguousName": true
+    "name": "PIA KHAS NYONYA ORIGINAL",
+    "ambiguousName": false
   },
   {
     "code": "07031",
@@ -326,7 +327,7 @@
   },
   {
     "code": "07023",
-    "name": "CHIFFON CHOCOLATE",
+    "name": "CHIFFON CHOCOLATE CHIPS",
     "ambiguousName": false
   },
   {
@@ -336,7 +337,7 @@
   },
   {
     "code": "06277",
-    "name": "SOFT CHEESE CAKE",
+    "name": "SOFT CHEESE CAKE SLICE",
     "ambiguousName": false
   },
   {
@@ -346,42 +347,42 @@
   },
   {
     "code": "08003",
-    "name": "MN AIR MINERAL 240",
+    "name": "MN AIR MINERAL 240 ML",
     "ambiguousName": false
   },
   {
     "code": "05091",
-    "name": "BACANG NASI AYAM",
-    "ambiguousName": true
+    "name": "BACANG NASI AYAM MANIS",
+    "ambiguousName": false
   },
   {
     "code": "03043",
-    "name": "FRUIT COCTAIL ZEBRA",
+    "name": "FRUIT COCTAIL ZEBRA PUDDING CUP",
     "ambiguousName": false
   },
   {
     "code": "04234",
-    "name": "PIA KHAS NYONYA",
-    "ambiguousName": true
+    "name": "PIA KHAS NYONYA KACANG HIJAU",
+    "ambiguousName": false
   },
   {
     "code": "05092",
-    "name": "BACANG NASI AYAM",
-    "ambiguousName": true
+    "name": "BACANG NASI AYAM PEDAS",
+    "ambiguousName": false
   },
   {
     "code": "08002",
-    "name": "MN AIR MINERAL 330",
+    "name": "MN AIR MINERAL 330 ML",
     "ambiguousName": false
   },
   {
     "code": "01517",
-    "name": "ROTI KENTANG KEJU",
+    "name": "ROTI KENTANG KEJU MANIS",
     "ambiguousName": false
   },
   {
     "code": "01556",
-    "name": "BANANA CHOCO",
+    "name": "BANANA CHOCO CHEESE BREAD",
     "ambiguousName": false
   },
   {
@@ -421,7 +422,7 @@
   },
   {
     "code": "01174",
-    "name": "WHITE MILK",
+    "name": "WHITE MILK CHOCOLATE BUN",
     "ambiguousName": false
   },
   {
@@ -436,7 +437,7 @@
   },
   {
     "code": "01197",
-    "name": "ROTI MAXI KAYA",
+    "name": "ROTI MAXI KAYA PANDAN",
     "ambiguousName": false
   },
   {
@@ -456,7 +457,7 @@
   },
   {
     "code": "01518",
-    "name": "ROTI KENTANG KETAN",
+    "name": "ROTI KENTANG KETAN HITAM",
     "ambiguousName": false
   },
   {
@@ -471,7 +472,7 @@
   },
   {
     "code": "01195",
-    "name": "ROTI MAXI CHOCO",
+    "name": "ROTI MAXI CHOCO CHEESE",
     "ambiguousName": false
   },
   {
@@ -492,11 +493,11 @@
   {
     "code": "01112",
     "name": "ROTI LEMPER AYAM",
-    "ambiguousName": true
+    "ambiguousName": false
   },
   {
     "code": "01183",
-    "name": "ROTI SALAMI BROWN",
+    "name": "ROTI SALAMI BROWN SAUCE",
     "ambiguousName": false
   }
 ];if(typeof module==="object"&&module.exports)module.exports=products;else root.PRODUCT_BANK=products;})(globalThis);

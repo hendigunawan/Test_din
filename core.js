@@ -67,5 +67,13 @@
       && a.maxViolations===3&&typeof a.pendingViolation==='boolean'
       && Array.isArray(a.violations)&&a.violations.every(v=>typeof v.reason==='string'&&Number.isFinite(v.at));
   }
-  return {VERSION,shuffle,createAttempt,normalize,isCorrect,setAnswer,finishAttempt,remaining,tick,violate,resumeAttempt,restoreAttempt,result,validAttempt};
+  function matchesBank(a,bank) {
+    if(!validAttempt(a)||!Array.isArray(bank)||bank.length!==100)return false;
+    const current=new Map(bank.map(p=>[p.code,p]));
+    return current.size===100&&a.questions.every(q=>{
+      const p=current.get(q.code);
+      return p&&q.name===p.name&&!!q.ambiguousName===!!p.ambiguousName;
+    });
+  }
+  return {VERSION,shuffle,createAttempt,normalize,isCorrect,setAnswer,finishAttempt,remaining,tick,violate,resumeAttempt,restoreAttempt,result,validAttempt,matchesBank};
 });

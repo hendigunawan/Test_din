@@ -13,6 +13,7 @@ Kuis bahasa Indonesia untuk menghafal kode dan nama 100 produk. Situs statis unt
 - Kejadian terkait dalam satu episode dihitung sekali. Soal ditutupi sampai peserta mengakui peringatan dan kembali ke ujian.
 - Waktu berbasis tenggat absolut. Reload dan halaman yang berjalan di latar belakang tidak mereset durasi.
 - Web Locks membatasi penulisan sesi ke satu tab pada browser yang mendukungnya.
+- Saat bank soal berubah, sesi dengan data lama diarahkan ke halaman awal. Jawaban lama tersimpan sampai pengguna memulai latihan baru; sesi dengan bank yang sama tetap melanjutkan tenggat semula.
 - Tampilan responsif dan tombol yang bisa digunakan melalui keyboard.
 
 ## Menjalankan
@@ -41,7 +42,7 @@ node --check core.js
 node --test tests/*.test.cjs
 ```
 
-11 tes mencakup komposisi 50/50, nama ambigu, nol di depan kode, penilaian, deduplikasi pelanggaran, penutupan pada pelanggaran ketiga, pemulihan sesi, tenggat waktu, format data tersimpan, serta alur pengisian sampai hasil. Tes pengendali memakai adapter DOM minimal dan tidak menggantikan pemeriksaan visual maupun perilaku fullscreen/fokus pada browser nyata.
+12 tes mencakup komposisi 50/50, nama ambigu, nol di depan kode, penilaian, deduplikasi pelanggaran, penutupan pada pelanggaran ketiga, pemulihan sesi, tenggat waktu, format data tersimpan, alur pengisian sampai hasil, serta penggantian sesi dari bank soal lama tanpa menimpa jawaban sebelum pengguna memulai sesi baru. Tes pengendali memakai adapter DOM minimal dan tidak menggantikan pemeriksaan visual maupun perilaku fullscreen/fokus pada browser nyata.
 
 Checklist manual setelah deploy:
 
@@ -64,7 +65,11 @@ Sesi baru boleh dimulai setelah selesai karena aplikasi ditujukan untuk latihan 
 
 Dipilih dari laporan `Transfer Crosstab (1).xls`, sheet `rptFormPermintaan`, KARAWANG HQ, periode 1–3 September 2026. Prioritas didasarkan pada **Total pengiriman**, sebagai pendekatan produk yang sering dibeli. Data ini tidak membuktikan jumlah pembelian pelanggan.
 
-100 produk dipilih setelah mengecualikan kemasan, tas, ongkos/deposit, `ROTI BS PR KG`, dan `PUTIH TELOR PER KG`. Nilai sama diurutkan berdasarkan kode naik. Nama dipertahankan sesuai file, termasuk teks yang terpotong. Repositori hanya memuat daftar kode/nama yang diperlukan untuk kuis.
+100 produk dipilih setelah mengecualikan kemasan, tas, ongkos/deposit, `ROTI BS PR KG`, dan `PUTIH TELOR PER KG`. Nilai sama diurutkan berdasarkan kode naik.
+
+Pada 8 Oktober 2026, seluruh 100 pasangan kode/nama dicocokkan dengan `sudah dibenerin kode produk.xlsx`, sheet `rptFormPermintaan`, kolom B–C. Pembaruan memperbaiki atau melengkapi 25 nama. Kode lima digit dan nol di depan dipertahankan. Penanda nama ambigu dihitung ulang terhadap seluruh katalog menggunakan normalisasi penilaian aplikasi.
+
+Pilihan 100 produk tetap mengikuti total lengkap pada laporan awal. File koreksi memuat bagian 20 cabang tanpa bagian lanjutan/kolom Total; angka pada 20 cabang tersebut sama dengan laporan awal. Karena itu, tidak dibuat peringkat baru dari jumlah cabang yang tidak lengkap. Repositori hanya memuat daftar kode/nama yang diperlukan untuk kuis.
 
 ## Referensi
 

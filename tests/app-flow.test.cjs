@@ -67,3 +67,23 @@ test('saved running UI restores answers and warns once after reload',async()=>{
   assert.equal(f.getAttempt().violations.length,1);
   assert(f.element('warning-dialog').open);
 });
+
+test('old product names require a new attempt and keep saved answers until the user starts',async()=>{
+  for(const status of ['active','finished']){
+    const initial=core.createAttempt(bank,{now:Date.now(),id:'old-bank',minutes:10});
+    initial.questions.find(q=>q.code==='01174').name='NAMA PRODUK VERSI SEBELUMNYA';
+    initial.answers[0]='jawaban sebelumnya';
+    if(status==='finished')core.finishAttempt(initial,'submitted');
+    const f=fixture(initial);await f.settle();
+    assert.match(f.element('app').innerHTML,/Data produk sudah diperbarui/);
+    assert.deepEqual(f.getAttempt(),initial);
+    assert(!f.element('warning-dialog').open);
+    f.element('duration').value='10';f.element('agreement').checked=true;
+    await f.element('start-button').click();
+    const current=f.getAttempt();
+    assert.equal(current.status,'active');
+    assert.equal(current.deadline-current.startedAt,600000);
+    assert(current.answers.every(answer=>answer===''));
+    assert.equal(current.questions.find(q=>q.code==='01174').name,bank.find(p=>p.code==='01174').name);
+  }
+});
