@@ -69,7 +69,9 @@ Dipilih dari laporan `Transfer Crosstab (1).xls`, sheet `rptFormPermintaan`, KAR
 
 Pada 8 Oktober 2026, seluruh 100 pasangan kode/nama dicocokkan dengan `sudah dibenerin kode produk.xlsx`, sheet `rptFormPermintaan`, kolom B–C. Pembaruan memperbaiki atau melengkapi 25 nama. Kode lima digit dan nol di depan dipertahankan. Penanda nama ambigu dihitung ulang terhadap seluruh katalog menggunakan normalisasi penilaian aplikasi.
 
-Pilihan 100 produk tetap mengikuti total lengkap pada laporan awal. File koreksi memuat bagian 20 cabang tanpa bagian lanjutan/kolom Total; angka pada 20 cabang tersebut sama dengan laporan awal. Karena itu, tidak dibuat peringkat baru dari jumlah cabang yang tidak lengkap. Repositori hanya memuat daftar kode/nama yang diperlukan untuk kuis.
+Pada 9 Oktober 2026, seluruh 100 pasangan kode/nama dicocokkan kembali dengan `terbaru.xlt.xls`, sheet `Sheet1`, kolom A–B. Nama kode `03148` diperbarui dari `COFFEE RAISIN` menjadi `COFFEE RAISIN PUDDING`. Semua kode latihan tetap sama. Daftar terbaru berisi 345 baris dengan 325 kode unik; baris berulang tidak menambah soal. Kode `07023` muncul dua kali dengan nama yang sama dan hanya dipakai sekali. Tidak ada konflik nama untuk 100 kode yang dipilih. Penanda nama ambigu diperiksa terhadap seluruh daftar terbaru.
+
+Pilihan 100 produk tetap mengikuti total lengkap pada laporan awal. File koreksi 8 Oktober memuat bagian 20 cabang tanpa bagian lanjutan/kolom Total; angka pada 20 cabang tersebut sama dengan laporan awal. File terbaru 9 Oktober hanya memuat kode dan nama, tanpa angka pengiriman. Karena itu, keduanya tidak dipakai untuk membuat peringkat baru. Repositori hanya memuat daftar kode/nama yang diperlukan untuk kuis.
 
 ## Referensi
 
