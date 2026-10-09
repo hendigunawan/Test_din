@@ -160,7 +160,9 @@
     const offset=sessions.length-points.length,left=44,right=460,top=26,bottom=184;
     const max=score?100:Math.max(1,Math.ceil(Math.max(...points.map(s=>s.durationMs))/60000));
     const value=s=>score?s.score:s.durationMs/60000;
-    const x=i=>points.length===1?(left+right)/2:left+(right-left)*i/(points.length-1);
+    const x=i=>score
+      ?(points.length===1?(left+right)/2:left+(right-left)*i/(points.length-1))
+      :left+(right-left)*(i+.5)/points.length;
     const y=s=>bottom-value(s)/max*(bottom-top);
     const ticks=[0,max/2,max];
     const grid=ticks.map(v=>{const py=bottom-v/max*(bottom-top);return `<line x1="${left}" x2="${right}" y1="${py}" y2="${py}" class="chart-grid"/><text x="${left-9}" y="${py+5}" text-anchor="end">${decimal(v)}</text>`;}).join('');
