@@ -9,12 +9,22 @@ Kuis bahasa Indonesia untuk menghafal kode dan nama 100 produk. Situs statis unt
 - Durasi 10, 30, 45, atau 60 menit, dengan 45 menit sebagai pilihan awal.
 - Navigasi soal, penanda ragu-ragu, penyimpanan jawaban otomatis di browser.
 - Skor maksimal 100, pembahasan setelah selesai, dan unduhan hasil dalam TXT.
+- Riwayat hingga 100 sesi terakhir di browser, grafik nilai dan durasi untuk 20 sesi terakhir, rata-rata nilai/durasi, serta tabel setiap sesi di halaman hasil.
+- Perkiraan waktu per soal terjawab pada sesi saat ini, dihitung dari durasi sesi dibagi jumlah jawaban yang diisi.
 - Perpindahan tab/aplikasi, hilangnya fokus jendela, keluar fullscreen, dan reload dicatat. Pelanggaran ketiga menyelesaikan percobaan otomatis.
 - Kejadian terkait dalam satu episode dihitung sekali. Soal ditutupi sampai peserta mengakui peringatan dan kembali ke ujian.
 - Waktu berbasis tenggat absolut. Reload dan halaman yang berjalan di latar belakang tidak mereset durasi.
 - Web Locks membatasi penulisan sesi ke satu tab pada browser yang mendukungnya.
 - Saat bank soal berubah, sesi dengan data lama diarahkan ke halaman awal. Jawaban lama tersimpan sampai pengguna memulai latihan baru; sesi dengan bank yang sama tetap melanjutkan tenggat semula.
 - Tampilan responsif dan tombol yang bisa digunakan melalui keyboard.
+
+## Riwayat dan waktu pengerjaan
+
+Ringkasan sesi yang selesai disimpan terpisah dari percobaan aktif, menggunakan `latihan-kode-produk:history:v1`. Sesi dihitung sekali berdasarkan ID sehingga refresh halaman hasil tidak membuat duplikasi. Pengiriman manual, waktu habis, dan penghentian otomatis semuanya masuk riwayat dengan status masing-masing. Ringkasan hanya berisi waktu, skor, jumlah soal terjawab, batas waktu, alasan selesai, dan jumlah pelanggaran; tidak menyalin seluruh soal/jawaban.
+
+Durasi memakai waktu mulai sampai selesai, dibatasi tenggat sesi, dan termasuk waktu di luar halaman. Rata-rata durasi dan nilai memakai seluruh sesi dalam riwayat (maksimal 100), termasuk sesi yang dihentikan. Grafik menampilkan hingga 20 sesi terakhir; tabel menampilkan seluruh riwayat yang disimpan. Waktu per soal terjawab adalah perkiraan dari durasi sesi saat ini dibagi jumlah soal yang diisi, bukan pengukuran waktu aktif setiap soal. Jika tidak ada jawaban, nilainya ditampilkan sebagai `—`.
+
+Hasil terakhir sebelum fitur ini tersedia akan dimasukkan bila masih tersimpan, termasuk hasil dari bank produk lama. Sesi-sesi yang sebelumnya sudah tertimpa tidak dapat dipulihkan. Riwayat hanya tersedia di browser/profil yang sama dan hilang bila data situs dihapus. Jika riwayat rusak atau penyimpanan gagal, hasil dan pembahasan tetap dapat dibuka, peringatan ditampilkan, dan data riwayat yang rusak tidak ditimpa.
 
 ## Menjalankan
 
@@ -39,10 +49,11 @@ Dengan GitHub Free, Pages membutuhkan repositori public. Aturan akun/organisasi 
 ```sh
 node --check app.js
 node --check core.js
+node --check history.js
 node --test tests/*.test.cjs
 ```
 
-12 tes mencakup komposisi 50/50, nama ambigu, nol di depan kode, penilaian, deduplikasi pelanggaran, penutupan pada pelanggaran ketiga, pemulihan sesi, tenggat waktu, format data tersimpan, alur pengisian sampai hasil, serta penggantian sesi dari bank soal lama tanpa menimpa jawaban sebelum pengguna memulai sesi baru. Tes pengendali memakai adapter DOM minimal dan tidak menggantikan pemeriksaan visual maupun perilaku fullscreen/fokus pada browser nyata.
+20 tes mencakup komposisi 50/50, nama ambigu, nol di depan kode, penilaian, deduplikasi pelanggaran, penutupan pada pelanggaran ketiga, pemulihan sesi, tenggat waktu, format data tersimpan, alur pengisian sampai hasil, serta penggantian sesi dari bank soal lama. Pengujian riwayat mencakup perhitungan durasi/rata-rata, batas 100 sesi, duplikasi saat refresh, sesi baru, impor hasil lama, penghentian otomatis, dan kegagalan penyimpanan tanpa merusak hasil. Tes pengendali memakai adapter DOM minimal dan tidak menggantikan pemeriksaan visual maupun perilaku fullscreen/fokus pada browser nyata.
 
 Checklist manual setelah deploy:
 
