@@ -499,5 +499,71 @@
     "code": "01183",
     "name": "ROTI SALAMI BROWN SAUCE",
     "ambiguousName": false
+  },
+  {
+    "code": "06026",
+    "name": "TIRAMISU TAART / CAKE 24 CM",
+    "ambiguousName": false
+  },
+  {
+    "code": "06035",
+    "name": "TIRAMISU TAART / CAKE 19 CM",
+    "ambiguousName": false
+  },
+  {
+    "code": "06037",
+    "name": "LEMON 24 CM DELIGHT 19 CM",
+    "ambiguousName": false
+  },
+  {
+    "code": "06099",
+    "name": "LAPIS SURABAYA 22 X 22 CM",
+    "ambiguousName": false
+  },
+  {
+    "code": "06139",
+    "name": "CHOCOLATE MOIST CAKE",
+    "ambiguousName": false
+  },
+  {
+    "code": "06069",
+    "name": "CHOCOLATE FUDGE CAKE 24 CM",
+    "ambiguousName": false
+  },
+  {
+    "code": "07117",
+    "name": "CORNFLAKE BUTTER TOPLES SEGI 8",
+    "ambiguousName": false
+  },
+  {
+    "code": "07118",
+    "name": "CORNFLAKE BUTTER TOPLES SEGI 4",
+    "ambiguousName": false
+  },
+  {
+    "code": "08045",
+    "name": "COKELAT LOLLY BESAR",
+    "ambiguousName": false
+  },
+  {
+    "code": "08046",
+    "name": "COKELAT LOLLY KECIL",
+    "ambiguousName": false
+  },
+  {
+    "code": "07005",
+    "name": "NASTAR JAMBU BOX",
+    "ambiguousName": false
+  },
+  {
+    "code": "07004",
+    "name": "NASTAR JAMBU SATUAN",
+    "ambiguousName": false
+  },
+  {
+    "code": "07167",
+    "name": "NASTAR JAMBU ISI 6 PCS",
+    "ambiguousName": false
   }
+
 ];if(typeof module==="object"&&module.exports)module.exports=products;else root.PRODUCT_BANK=products;})(globalThis);
