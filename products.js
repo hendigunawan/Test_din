@@ -1,4 +1,4 @@
-// Kode dan nama: terbaru.xlt.xls, Sheet1 kolom A–B, diperbarui 9 Oktober 2026.
+// Kode dan nama: terbaru.xlt.xls, Sheet1 kolom A–B, diperbarui 10 Oktober 2026.
 (function(root){const products=[
   {
     "code": "05001",
