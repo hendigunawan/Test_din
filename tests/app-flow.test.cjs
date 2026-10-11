@@ -24,8 +24,8 @@ function fixture(initial,options={}) {
   }
   const document={visibilityState:'visible',fullscreenEnabled:true,fullscreenElement:null,getElementById:element,hasFocus:()=>true,
     addEventListener:(type,fn)=>{docEvents[type]=fn;},documentElement:{async requestFullscreen(){document.fullscreenElement={};}},
-    async exitFullscreen(){document.fullscreenElement=null;},createElement:()=>element('download')};
-  const window={QuizCore:core,QuizHistory:history,PRODUCT_BANK:options.bank||bank,innerWidth:1000,scrollTo(){},addEventListener:(type,fn)=>{winEvents[type]=fn;}};
+    async exitFullscreen(){document.fullscreenElement=null;},createElement:()=>element('download'),querySelector:()=>element('meta-description')};
+  const window={QuizCore:core,QuizHistory:history,PRODUCT_BANK:options.bank||bank,PRODUCT_META:options.meta,innerWidth:1000,scrollTo(){},addEventListener:(type,fn)=>{winEvents[type]=fn;}};
   const sandbox={window,document,navigator:{},localStorage:{getItem:k=>records.get(k)??null,setItem:(k,v)=>{if(options.failHistoryWrite&&k===HISTORY_STORE)throw new Error('quota');records.set(k,v);},removeItem:k=>records.delete(k)},crypto:{randomUUID:()=> 'test-attempt'},setTimeout,clearTimeout,setInterval:fn=>intervals.push(fn),console,Blob,URL,Date};
   vm.runInNewContext(code,sandbox);
   return {element,document,window,winEvents,docEvents,intervals,records,getAttempt:()=>JSON.parse(records.get('latihan-kode-produk:v1')),async settle(){await new Promise(r=>setImmediate(r));}};
@@ -142,9 +142,10 @@ test('damaged or full history storage leaves results readable and never overwrit
 });
 
 test('adding catalog products preserves the saved 100-question session on reload',async()=>{
-  const initial=core.createAttempt(bank.slice(0,100),{now:Date.now(),id:'before-expansion',minutes:10});
+  const expanded=Array.from({length:113},(_,i)=>({code:String(i+1).padStart(5,'0'),name:`PRODUK UNIK ${i+1}`}));
+  const initial=core.createAttempt(expanded.slice(0,100),{now:Date.now(),id:'before-expansion',minutes:10});
   initial.answers[2]='01001';
-  const f=fixture(initial,{bank});await f.settle();
+  const f=fixture(initial,{bank:expanded});await f.settle();
   assert.match(f.element('app').innerHTML,/Latihan kode & nama/);
   assert.deepEqual(f.getAttempt().questions,initial.questions);
   assert.equal(f.getAttempt().answers[2],'01001');assert.equal(f.getAttempt().deadline,initial.deadline);
@@ -157,4 +158,23 @@ test('setup shows catalog size while an undersized bank cannot start a short qui
   const small=fixture(null,{bank:bank.slice(0,99)});await small.settle();
   assert.match(small.element('app').innerHTML,/minimal 100/);
   assert(!small.records.has('latihan-kode-produk:v1'));
+});
+
+test('the description follows built product count and the product commit date in WIB',async()=>{
+  const expanded=Array.from({length:114},(_,i)=>({code:String(i+1).padStart(5,'0'),name:`PRODUK ${i+1}`}));
+  const f=fixture(null,{bank:expanded,meta:{count:114,updatedAt:'2026-02-02T18:30:00.000Z'}});await f.settle();
+  const html=f.element('app').innerHTML;
+  assert.match(html,/Data produk diperbarui 3 Februari 2026/);
+  assert.match(html,/Tersedia 114 produk/);assert.match(html,/products\.js/);
+  assert.match(f.element('meta-description').content,/114 produk.*3 Februari 2026/);
+});
+
+test('missing, mismatched or invalid metadata never fabricates a date or blocks practice',async()=>{
+  for(const meta of [undefined,{count:bank.length,updatedAt:'invalid'},{count:bank.length+1,updatedAt:'2026-01-01T00:00:00Z'}]){
+    const f=fixture(null,{meta});await f.settle();
+    assert.match(f.element('app').innerHTML,new RegExp(`Tersedia ${bank.length} produk`));
+    assert.doesNotMatch(f.element('app').innerHTML,/Data produk diperbarui|Invalid Date/);
+    f.element('agreement').checked=true;await f.element('start-button').click();
+    assert.equal(f.getAttempt().questions.length,100);
+  }
 });

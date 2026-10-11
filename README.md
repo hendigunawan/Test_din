@@ -18,10 +18,15 @@ Kuis bahasa Indonesia untuk menghafal kode dan nama produk. Setiap sesi mengambi
 - Web Locks membatasi penulisan sesi ke satu tab pada browser yang mendukungnya.
 - Tambahan produk tidak mengacak ulang sesi yang sedang berjalan. Jika kode/nama atau status nama ambigu pada soal terpilih berubah, pengguna diarahkan ke halaman awal. Jawaban lama tersimpan sampai latihan baru dimulai.
 - Tampilan responsif dan tombol yang bisa digunakan melalui keyboard.
+- Jumlah dataset dan tanggal pembaruan di deskripsi mengikuti `products.js` secara otomatis saat publikasi.
 
 ## Memperbarui daftar produk
 
 Tambahkan entri di array `products` dalam `products.js`; jumlahnya boleh lebih dari 100. Pertahankan kode sebagai string lima digit (misalnya `"01001"`) agar nol di depan tidak hilang. Setiap kode harus berbeda dan nama produk tidak boleh kosong. Aplikasi menampilkan pesan bila daftar belum memenuhi minimal 100 produk atau memiliki kode duplikat/tidak valid.
+
+Setelah GitHub Pages memakai **GitHub Actions** sebagai sumber publikasi (lihat di bawah), cukup edit **`products.js` pada branch `main`**, lalu **Commit changes**. Workflow **Publish quiz** otomatis memeriksa data, menghitung jumlah produk, mengambil tanggal commit terakhir yang mengubah `products.js`, dan menerbitkan situs. Tidak perlu mengedit tanggal, jumlah dataset, `app.js`, atau `index.html`.
+
+Tanggal ditampilkan dalam **WIB / Asia/Jakarta**. Mengubah file aplikasi lain tidak mengganti tanggal dataset; mengubah isi atau komentar `products.js` akan menggantinya sesuai commit file tersebut. Tanggal bukan waktu pengunjung membuka halaman. Metadata dan data dikemas dalam satu file dengan nama berdasarkan isinya agar browser mengambil versi yang sesuai. Sesi yang sudah terbuka tetap memakai pilihan tersimpannya.
 
 `ambiguousName` boleh dihilangkan. Aplikasi otomatis mendeteksi nama yang sama pada kode berbeda di seluruh katalog. Nilai `true` yang sudah dicantumkan tetap dihormati, termasuk untuk nama yang juga dipakai produk di luar daftar. Diperlukan minimal 50 produk dengan nama tidak ambigu agar format 50 soal kode dan 50 soal nama tetap terpenuhi.
 
@@ -45,13 +50,22 @@ python3 -m http.server 8765
 
 Buka `http://localhost:8765`. Untuk mencoba tanpa server, buka `index.html` langsung. Dukungan penyimpanan, fullscreen, dan penguncian satu tab pada alamat `file://` dapat berbeda antarbrowser; gunakan GitHub Pages untuk pemakaian utama.
 
+Pratinjau lokal tanpa build menampilkan jumlah produk tanpa mengarang tanggal pembaruan. Untuk memeriksa hasil publikasi beserta tanggal dari riwayat Git, gunakan Node.js 24 dan jalankan dari checkout repo:
+
+```sh
+node scripts/build.cjs
+python3 -m http.server 8765 --directory dist
+```
+
+Folder `dist/` dihasilkan otomatis dan tidak perlu di-commit. Build membutuhkan riwayat Git `products.js`; workflow mengambil riwayat lengkap. Untuk penerbitan manual dari salinan tanpa Git, `PRODUCTS_UPDATED_AT` dapat diisi dengan timestamp commit produk yang sudah diverifikasi. Jangan memakai tanggal hari ini sebagai pengganti.
+
 ## GitHub Pages
 
-Repositori: [hendigunawan/Test_din](https://github.com/hendigunawan/Test_din). Semua file aplikasi berada di root branch `main`, termasuk `.nojekyll`. Versi publik berada di branch `gh-pages`; pembuatan branch ini sudah mengaktifkan GitHub Pages.
+Repositori: [hendigunawan/Test_din](https://github.com/hendigunawan/Test_din). Sumber aplikasi berada di branch `main`. Workflow `.github/workflows/pages.yml` membuat artefak situs dari `dist/`, kemudian menerbitkannya menggunakan GitHub Pages.
 
-Untuk memeriksa pengaturan, buka [**Settings → Pages**](https://github.com/hendigunawan/Test_din/settings/pages). Sumber publikasi adalah **Deploy from a branch → gh-pages → / (root)**. Alamat situs ditampilkan GitHub setelah deployment selesai.
+**Pengaturan satu kali:** buka [**Settings → Pages**](https://github.com/hendigunawan/Test_din/settings/pages), lalu ubah **Build and deployment → Source → GitHub Actions**. Jika environment `github-pages` masih membatasi publikasi ke `gh-pages`, ubah aturan deployment branch menjadi `main` di **Settings → Environments → github-pages**. Jalankan workflow **Publish quiz** dari tab **Actions → Run workflow** setelah mengganti pengaturan. Selanjutnya setiap commit ke `main` otomatis menjalankan pengujian dan publikasi.
 
-Untuk menerbitkan perubahan selanjutnya, perbarui `main`, lalu gabungkan perubahan tersebut ke `gh-pages`. Hanya perubahan pada `gh-pages` yang memperbarui situs publik.
+Konfigurasi lama **Deploy from a branch → gh-pages** tidak menjalankan build metadata dari `main` secara otomatis. Selama migrasi, branch `gh-pages` dapat tetap menyajikan snapshot build terakhir; jangan mengedit file hasil build untuk memperbarui katalog. Jika validasi katalog gagal, workflow berhenti dan situs yang sudah terbit tetap tersedia. Periksa log **Publish quiz** untuk penyebabnya.
 
 Dengan GitHub Free, Pages membutuhkan repositori public. Aturan akun/organisasi lain dapat berbeda. File produk di situs statis dapat dibaca oleh pengunjung.
 
@@ -62,10 +76,11 @@ node --check app.js
 node --check core.js
 node --check products.js
 node --check history.js
+node --check scripts/build.cjs
 node --test tests/*.test.cjs
 ```
 
-28 tes mencakup pemilihan tepat 100 produk dari katalog besar, keterpilihan produk setelah baris ke-100, pergantian pilihan antar-sesi, komposisi 50/50, nama ambigu di seluruh katalog, validasi data, pemulihan pilihan lama saat katalog diperluas, nol di depan kode, penilaian, deduplikasi pelanggaran, penutupan pada pelanggaran ketiga, tenggat waktu, serta alur pengisian sampai hasil. Pengujian riwayat mencakup perhitungan durasi/rata-rata, batas 100 sesi, duplikasi saat refresh, sesi baru, impor hasil lama, penghentian otomatis, dan kegagalan penyimpanan tanpa merusak hasil. Tes pengendali memakai adapter DOM minimal dan tidak menggantikan pemeriksaan visual maupun perilaku fullscreen/fokus pada browser nyata.
+Pengujian mencakup pemilihan tepat 100 produk dari katalog besar, keterpilihan produk setelah baris ke-100, pergantian pilihan antar-sesi, komposisi 50/50, nama ambigu di seluruh katalog, validasi data, pemulihan pilihan lama saat katalog diperluas, nol di depan kode, penilaian, deduplikasi pelanggaran, penutupan pada pelanggaran ketiga, tenggat waktu, serta alur pengisian sampai hasil. Pengujian riwayat mencakup perhitungan durasi/rata-rata, batas 100 sesi, duplikasi saat refresh, sesi baru, impor hasil lama, penghentian otomatis, dan kegagalan penyimpanan tanpa merusak hasil. Pengujian build memeriksa perubahan jumlah/tanggal dari commit produk, tanggal yang tetap setelah perubahan aplikasi, nama aset baru saat nama produk berubah, dan penolakan data tidak valid sebelum publikasi. Tes pengendali memakai adapter DOM minimal dan tidak menggantikan pemeriksaan visual maupun perilaku fullscreen/fokus pada browser nyata.
 
 Checklist manual setelah deploy:
 

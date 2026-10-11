@@ -30,7 +30,12 @@
     });
   }
   function freeLock(){if(releaseLock){releaseLock();releaseLock=null;}else ownsLock=false;}
-  function sourceNote(){return `<section class="source-note"><strong>Data produk diperbarui 10 Oktober 2026</strong><p>Tersedia ${products.length} produk dalam daftar terbaru. Setiap sesi memilih 100 produk secara acak, dengan 50 soal kode dan 50 soal nama. Sesi baru dapat memuat pilihan produk berbeda.</p></section>`;}
+  function productUpdateDate(){
+    const meta=window.PRODUCT_META;
+    if(meta?.count!==products.length||typeof meta.updatedAt!=='string'||!Number.isFinite(Date.parse(meta.updatedAt)))return '';
+    return new Date(meta.updatedAt).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Jakarta'});
+  }
+  function sourceNote(){const date=productUpdateDate();return `<section class="source-note"><strong>${date?`Data produk diperbarui ${escape(date)}`:'Daftar produk untuk latihan'}</strong><p>Tersedia ${products.length} produk dalam dataset <code>products.js</code>. Setiap sesi memilih 100 produk secara acak, dengan 50 soal kode dan 50 soal nama. Sesi baru dapat memuat pilihan produk berbeda.</p></section>`;}
   function showWelcome(message=''){
     armed=false;app.classList.remove('masked');
     app.innerHTML=`${message?`<div class="notice" role="status">${escape(message)}</div>`:''}<section class="hero"><div class="hero-copy"><span class="eyebrow">PERSIAPAN TES PRODUK</span><h1>Kenali produknya.<br><span class="emphasis">Ingat kodenya.</span></h1><p class="lead">Latih hafalanmu lewat soal kode dan nama produk. Kerjakan dengan fokus, lalu lihat bagian yang perlu diulang.</p><div class="specimen"><div><strong>100</strong><span>soal per sesi</span></div><div><strong>50 : 50</strong><span>kode & nama</span></div><div><strong>3×</strong><span>batas pelanggaran</span></div></div></div><section class="setup" aria-labelledby="setup-title"><h2 id="setup-title">Siap latihan?</h2><p class="muted" style="font-size:13px">100 produk dipilih acak dari ${products.length} produk setiap sesi baru.</p><label for="duration">Durasi latihan</label><div class="select-wrap"><select id="duration"><option value="10">10 menit — latihan singkat</option><option value="30">30 menit — latihan cepat</option><option value="45" selected>45 menit — waktu yang cukup</option><option value="60">60 menit — lebih santai</option></select></div><ol class="rules"><li><span class="rule-number">01</span><div><strong>Tetap di halaman ujian</strong><span>Pindah tab, aplikasi, kehilangan fokus jendela, atau keluar layar penuh dihitung sebagai pelanggaran.</span></div></li><li><span class="rule-number">02</span><div><strong>3 pelanggaran, ujian selesai</strong><span>Setiap kejadian diberi peringatan. Waktu tetap berjalan saat kamu meninggalkan halaman.</span></div></li><li><span class="rule-number">03</span><div><strong>Refresh tidak mengulang sesi</strong><span>Jawaban dan waktu tersimpan. Memuat ulang halaman juga tercatat sebagai pelanggaran.</span></div></li></ol><label class="agreement"><input id="agreement" type="checkbox"><span>Aku memahami aturan dan siap mengerjakan tanpa membuka halaman lain.</span></label><button id="start-button" class="button primary wide" disabled>Mulai latihan <span aria-hidden="true">→</span></button><p class="start-hint">Layar penuh akan aktif jika browser mendukung.</p><p id="start-error" class="error" role="status"></p></section></section><div class="notice">Mode fokus mencatat perpindahan halaman, tetapi tidak dapat mengunci perangkat sepenuhnya. Hasil latihan hanya disimpan di browser ini.</div>${sourceNote()}`;
@@ -243,6 +248,8 @@
   async function boot(){
     try{
       products=C.prepareBank(window.PRODUCT_BANK);
+      const description=document.querySelector('meta[name="description"]'),date=productUpdateDate();
+      if(description)description.content=`Latihan 100 soal acak dari ${products.length} produk.${date?` Data diperbarui ${date}.`:''} Nilai otomatis, riwayat latihan, dan mode fokus.`;
       await restore();
     }catch(error){app.innerHTML=`<section class="blocked"><h1>Soal belum bisa dimuat.</h1><p class="muted">${escape(error.message)} Periksa koneksi dan muat ulang halaman.</p><button id="retry" class="button primary">Coba lagi</button></section>`;$('retry').addEventListener('click',boot);}
   }
