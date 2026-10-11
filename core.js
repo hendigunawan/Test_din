@@ -13,14 +13,33 @@
     }
     return copy;
   }
+  function prepareBank(bank) {
+    if(!Array.isArray(bank)||bank.length<100)throw new Error('Bank produk harus memuat minimal 100 produk.');
+    const codes=new Set(),names=new Map();
+    for(const p of bank){
+      if(!p||typeof p.code!=='string'||!/^\d{5}$/.test(p.code))throw new Error('Kode produk harus berupa teks 5 digit, termasuk nol di depan.');
+      if(codes.has(p.code))throw new Error(`Kode produk duplikat: ${p.code}.`);
+      if(typeof p.name!=='string'||!normalize(p.name,'name'))throw new Error(`Nama produk untuk kode ${p.code} harus memuat huruf A–Z atau angka.`);
+      codes.add(p.code);
+      const name=normalize(p.name,'name');names.set(name,(names.get(name)||0)+1);
+    }
+    const products=bank.map(p=>({...p,ambiguousName:!!p.ambiguousName||names.get(normalize(p.name,'name'))>1}));
+    if(products.filter(p=>!p.ambiguousName).length<50)throw new Error('Bank harus memuat minimal 50 nama produk yang unik untuk soal tebak kode.');
+    return products;
+  }
   function createAttempt(bank, {now=Date.now(),minutes=45,id,random=Math.random}={}) {
-    if(bank.length!==100 || new Set(bank.map(p=>p.code)).size!==100) throw new Error('Bank harus memuat 100 kode berbeda.');
     if(![10,30,45,60].includes(minutes)) throw new Error('Durasi tidak valid.');
-    const safe=shuffle(bank.filter(p=>!p.ambiguousName),random);
-    if(safe.length<50)throw new Error('Belum cukup nama produk yang unik.');
+    const pool=shuffle(prepareBank(bank),random),selected=pool.slice(0,100);
+    let safeCount=selected.filter(p=>!p.ambiguousName).length;
+    // Keep the 50/50 format even if the sample contains too many shared names.
+    const extraSafe=pool.slice(100).filter(p=>!p.ambiguousName);
+    for(let i=selected.length-1;safeCount<50;i--){
+      if(selected[i].ambiguousName){selected[i]=extraSafe.pop();safeCount++;}
+    }
+    const safe=shuffle(selected.filter(p=>!p.ambiguousName),random);
     const codeSet=new Set(safe.slice(0,50).map(p=>p.code));
     return {version:VERSION,id:id || String(now),status:'active',startedAt:now,deadline:now+minutes*60000,
-      minutes,questions:shuffle(bank.map(p=>({...p,kind:codeSet.has(p.code)?'code':'name'})),random),
+      minutes,questions:shuffle(selected.map(p=>({...p,kind:codeSet.has(p.code)?'code':'name'})),random),
       answers:Array(100).fill(''),flags:Array(100).fill(false),current:0,violations:[],maxViolations:3,
       pendingViolation:false,requiresFullscreen:false,finishedAt:null,finishReason:null};
   }
@@ -68,12 +87,14 @@
       && Array.isArray(a.violations)&&a.violations.every(v=>typeof v.reason==='string'&&Number.isFinite(v.at));
   }
   function matchesBank(a,bank) {
-    if(!validAttempt(a)||!Array.isArray(bank)||bank.length!==100)return false;
-    const current=new Map(bank.map(p=>[p.code,p]));
-    return current.size===100&&a.questions.every(q=>{
+    if(!validAttempt(a))return false;
+    let products;
+    try{products=prepareBank(bank);}catch{return false;}
+    const current=new Map(products.map(p=>[p.code,p]));
+    return a.questions.every(q=>{
       const p=current.get(q.code);
       return p&&q.name===p.name&&!!q.ambiguousName===!!p.ambiguousName;
     });
   }
-  return {VERSION,shuffle,createAttempt,normalize,isCorrect,setAnswer,finishAttempt,remaining,tick,violate,resumeAttempt,restoreAttempt,result,validAttempt,matchesBank};
+  return {VERSION,shuffle,prepareBank,createAttempt,normalize,isCorrect,setAnswer,finishAttempt,remaining,tick,violate,resumeAttempt,restoreAttempt,result,validAttempt,matchesBank};
 });

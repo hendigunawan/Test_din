@@ -25,7 +25,7 @@ function fixture(initial,options={}) {
   const document={visibilityState:'visible',fullscreenEnabled:true,fullscreenElement:null,getElementById:element,hasFocus:()=>true,
     addEventListener:(type,fn)=>{docEvents[type]=fn;},documentElement:{async requestFullscreen(){document.fullscreenElement={};}},
     async exitFullscreen(){document.fullscreenElement=null;},createElement:()=>element('download')};
-  const window={QuizCore:core,QuizHistory:history,PRODUCT_BANK:bank,innerWidth:1000,scrollTo(){},addEventListener:(type,fn)=>{winEvents[type]=fn;}};
+  const window={QuizCore:core,QuizHistory:history,PRODUCT_BANK:options.bank||bank,innerWidth:1000,scrollTo(){},addEventListener:(type,fn)=>{winEvents[type]=fn;}};
   const sandbox={window,document,navigator:{},localStorage:{getItem:k=>records.get(k)??null,setItem:(k,v)=>{if(options.failHistoryWrite&&k===HISTORY_STORE)throw new Error('quota');records.set(k,v);},removeItem:k=>records.delete(k)},crypto:{randomUUID:()=> 'test-attempt'},setTimeout,clearTimeout,setInterval:fn=>intervals.push(fn),console,Blob,URL,Date};
   vm.runInNewContext(code,sandbox);
   return {element,document,window,winEvents,docEvents,intervals,records,getAttempt:()=>JSON.parse(records.get('latihan-kode-produk:v1')),async settle(){await new Promise(r=>setImmediate(r));}};
@@ -75,7 +75,7 @@ test('saved running UI restores answers and warns once after reload',async()=>{
 test('old product names require a new attempt and keep saved answers until the user starts',async()=>{
   for(const status of ['active','finished']){
     const initial=core.createAttempt(bank,{now:Date.now(),id:'old-bank',minutes:10});
-    initial.questions.find(q=>q.code==='01174').name='NAMA PRODUK VERSI SEBELUMNYA';
+    initial.questions[0].name='NAMA PRODUK VERSI SEBELUMNYA';
     initial.answers[0]='jawaban sebelumnya';
     if(status==='finished')core.finishAttempt(initial,'submitted');
     const f=fixture(initial);await f.settle();
@@ -88,7 +88,7 @@ test('old product names require a new attempt and keep saved answers until the u
     assert.equal(current.status,'active');
     assert.equal(current.deadline-current.startedAt,600000);
     assert(current.answers.every(answer=>answer===''));
-    assert.equal(current.questions.find(q=>q.code==='01174').name,bank.find(p=>p.code==='01174').name);
+    assert(core.matchesBank(current,bank));
   }
 });
 
@@ -139,4 +139,22 @@ test('damaged or full history storage leaves results readable and never overwrit
     assert.equal(f.records.get(HISTORY_STORE),options.historyRaw);
     assert.match(f.element('review').innerHTML,/Belum dijawab/);
   }
+});
+
+test('adding catalog products preserves the saved 100-question session on reload',async()=>{
+  const initial=core.createAttempt(bank.slice(0,100),{now:Date.now(),id:'before-expansion',minutes:10});
+  initial.answers[2]='01001';
+  const f=fixture(initial,{bank});await f.settle();
+  assert.match(f.element('app').innerHTML,/Latihan kode & nama/);
+  assert.deepEqual(f.getAttempt().questions,initial.questions);
+  assert.equal(f.getAttempt().answers[2],'01001');assert.equal(f.getAttempt().deadline,initial.deadline);
+  assert.equal(f.getAttempt().violations.length,1);
+});
+
+test('setup shows catalog size while an undersized bank cannot start a short quiz',async()=>{
+  const f=fixture();await f.settle();
+  assert.match(f.element('app').innerHTML,new RegExp(`100 produk dipilih acak dari ${bank.length} produk`));
+  const small=fixture(null,{bank:bank.slice(0,99)});await small.settle();
+  assert.match(small.element('app').innerHTML,/minimal 100/);
+  assert(!small.records.has('latihan-kode-produk:v1'));
 });

@@ -1,11 +1,12 @@
 # Latihan Kode Produk
 
-Kuis bahasa Indonesia untuk menghafal kode dan nama 100 produk. Situs statis untuk GitHub Pages, tanpa framework atau instalasi dependensi.
+Kuis bahasa Indonesia untuk menghafal kode dan nama produk. Setiap sesi mengambil 100 produk acak dari seluruh daftar `products.js`, yang boleh berisi lebih dari 100 produk. Situs statis untuk GitHub Pages, tanpa framework atau instalasi dependensi.
 
 ## Fitur
 
-- 100 soal isian: 50 menebak kode dan 50 menebak nama, diacak pada setiap sesi baru.
-- Nama yang sama pada beberapa kode selalu ditanyakan dari kode ke nama.
+- Tepat 100 soal isian dari 100 kode berbeda: 50 menebak kode dan 50 menebak nama. Pilihan produk, jenis pertanyaan, dan urutan diacak pada setiap sesi baru.
+- Seluruh daftar ikut pengacakan, termasuk produk setelah baris ke-100; katalog saat pembaruan 10 Oktober 2026 memuat 113 produk.
+- Nama yang sama pada beberapa kode selalu ditanyakan dari kode ke nama. Kesamaan nama diperiksa terhadap seluruh katalog dengan normalisasi penilaian.
 - Durasi 10, 30, 45, atau 60 menit, dengan 45 menit sebagai pilihan awal.
 - Navigasi soal, penanda ragu-ragu, penyimpanan jawaban otomatis di browser.
 - Skor maksimal 100, pembahasan setelah selesai, dan unduhan hasil dalam TXT.
@@ -15,8 +16,18 @@ Kuis bahasa Indonesia untuk menghafal kode dan nama 100 produk. Situs statis unt
 - Kejadian terkait dalam satu episode dihitung sekali. Soal ditutupi sampai peserta mengakui peringatan dan kembali ke ujian.
 - Waktu berbasis tenggat absolut. Reload dan halaman yang berjalan di latar belakang tidak mereset durasi.
 - Web Locks membatasi penulisan sesi ke satu tab pada browser yang mendukungnya.
-- Saat bank soal berubah, sesi dengan data lama diarahkan ke halaman awal. Jawaban lama tersimpan sampai pengguna memulai latihan baru; sesi dengan bank yang sama tetap melanjutkan tenggat semula.
+- Tambahan produk tidak mengacak ulang sesi yang sedang berjalan. Jika kode/nama atau status nama ambigu pada soal terpilih berubah, pengguna diarahkan ke halaman awal. Jawaban lama tersimpan sampai latihan baru dimulai.
 - Tampilan responsif dan tombol yang bisa digunakan melalui keyboard.
+
+## Memperbarui daftar produk
+
+Tambahkan entri di array `products` dalam `products.js`; jumlahnya boleh lebih dari 100. Pertahankan kode sebagai string lima digit (misalnya `"01001"`) agar nol di depan tidak hilang. Setiap kode harus berbeda dan nama produk tidak boleh kosong. Aplikasi menampilkan pesan bila daftar belum memenuhi minimal 100 produk atau memiliki kode duplikat/tidak valid.
+
+`ambiguousName` boleh dihilangkan. Aplikasi otomatis mendeteksi nama yang sama pada kode berbeda di seluruh katalog. Nilai `true` yang sudah dicantumkan tetap dihormati, termasuk untuk nama yang juga dipakai produk di luar daftar. Diperlukan minimal 50 produk dengan nama tidak ambigu agar format 50 soal kode dan 50 soal nama tetap terpenuhi.
+
+Saat sesi baru dimulai, aplikasi mengacak seluruh katalog lalu mengambil 100 produk tanpa pengulangan kode. Bila hasil pilihan belum memuat 50 nama unik, sebagian produk bernama ambigu diganti dengan produk bernama unik dari sisa katalog. Setelah itu jenis dan urutan pertanyaan diacak. Dengan nama yang cukup unik pada pilihan awal, semua produk memiliki peluang pemilihan yang sama; syarat 50/50 dapat membatasi pilihan bila banyak nama ambigu. Sesi berbeda boleh memuat produk yang sama, tetapi satu sesi tidak mengulang kode.
+
+Soal terpilih disimpan bersama jawaban dan tenggatnya. Memuat ulang atau melanjutkan sesi tidak mengambil 100 produk baru. Perubahan daftar baru digunakan saat memulai sesi berikutnya, kecuali perubahan memengaruhi soal yang sedang tersimpan.
 
 ## Riwayat dan waktu pengerjaan
 
@@ -49,11 +60,12 @@ Dengan GitHub Free, Pages membutuhkan repositori public. Aturan akun/organisasi 
 ```sh
 node --check app.js
 node --check core.js
+node --check products.js
 node --check history.js
 node --test tests/*.test.cjs
 ```
 
-20 tes mencakup komposisi 50/50, nama ambigu, nol di depan kode, penilaian, deduplikasi pelanggaran, penutupan pada pelanggaran ketiga, pemulihan sesi, tenggat waktu, format data tersimpan, alur pengisian sampai hasil, serta penggantian sesi dari bank soal lama. Pengujian riwayat mencakup perhitungan durasi/rata-rata, batas 100 sesi, duplikasi saat refresh, sesi baru, impor hasil lama, penghentian otomatis, dan kegagalan penyimpanan tanpa merusak hasil. Tes pengendali memakai adapter DOM minimal dan tidak menggantikan pemeriksaan visual maupun perilaku fullscreen/fokus pada browser nyata.
+28 tes mencakup pemilihan tepat 100 produk dari katalog besar, keterpilihan produk setelah baris ke-100, pergantian pilihan antar-sesi, komposisi 50/50, nama ambigu di seluruh katalog, validasi data, pemulihan pilihan lama saat katalog diperluas, nol di depan kode, penilaian, deduplikasi pelanggaran, penutupan pada pelanggaran ketiga, tenggat waktu, serta alur pengisian sampai hasil. Pengujian riwayat mencakup perhitungan durasi/rata-rata, batas 100 sesi, duplikasi saat refresh, sesi baru, impor hasil lama, penghentian otomatis, dan kegagalan penyimpanan tanpa merusak hasil. Tes pengendali memakai adapter DOM minimal dan tidak menggantikan pemeriksaan visual maupun perilaku fullscreen/fokus pada browser nyata.
 
 Checklist manual setelah deploy:
 
@@ -74,7 +86,7 @@ Sesi baru boleh dimulai setelah selesai karena aplikasi ditujukan untuk latihan 
 
 ## Sumber produk
 
-Dipilih dari laporan `Transfer Crosstab (1).xls`, sheet `rptFormPermintaan`, KARAWANG HQ, periode 1–3 September 2026. Prioritas didasarkan pada **Total pengiriman**, sebagai pendekatan produk yang sering dibeli. Data ini tidak membuktikan jumlah pembelian pelanggan.
+100 produk awal dipilih dari laporan `Transfer Crosstab (1).xls`, sheet `rptFormPermintaan`, KARAWANG HQ, periode 1–3 September 2026. Prioritas awal didasarkan pada **Total pengiriman**, sebagai pendekatan produk yang sering dibeli. Data ini tidak membuktikan jumlah pembelian pelanggan.
 
 100 produk dipilih setelah mengecualikan kemasan, tas, ongkos/deposit, `ROTI BS PR KG`, dan `PUTIH TELOR PER KG`. Nilai sama diurutkan berdasarkan kode naik.
 
@@ -82,7 +94,9 @@ Pada 8 Oktober 2026, seluruh 100 pasangan kode/nama dicocokkan dengan `sudah dib
 
 Pada 9 Oktober 2026, seluruh 100 pasangan kode/nama dicocokkan kembali dengan `terbaru.xlt.xls`, sheet `Sheet1`, kolom A–B. Nama kode `03148` diperbarui dari `COFFEE RAISIN` menjadi `COFFEE RAISIN PUDDING`. Semua kode latihan tetap sama. Daftar terbaru berisi 345 baris dengan 325 kode unik; baris berulang tidak menambah soal. Kode `07023` muncul dua kali dengan nama yang sama dan hanya dipakai sekali. Tidak ada konflik nama untuk 100 kode yang dipilih. Penanda nama ambigu diperiksa terhadap seluruh daftar terbaru.
 
-Pilihan 100 produk tetap mengikuti total lengkap pada laporan awal. File koreksi 8 Oktober memuat bagian 20 cabang tanpa bagian lanjutan/kolom Total; angka pada 20 cabang tersebut sama dengan laporan awal. File terbaru 9 Oktober hanya memuat kode dan nama, tanpa angka pengiriman. Karena itu, keduanya tidak dipakai untuk membuat peringkat baru. Repositori hanya memuat daftar kode/nama yang diperlukan untuk kuis.
+Pemilihan 100 produk awal mengikuti total lengkap pada laporan awal. File koreksi 8 Oktober memuat bagian 20 cabang tanpa bagian lanjutan/kolom Total; angka pada 20 cabang tersebut sama dengan laporan awal. File terbaru 9 Oktober hanya memuat kode dan nama, tanpa angka pengiriman. Karena itu, keduanya tidak dipakai untuk membuat peringkat baru.
+
+Pada 10 Oktober 2026, pembaruan `products.js` oleh pemilik repo menambahkan 13 produk, sehingga katalog berisi 113 kode unik. Seluruh pasangan kode/nama dari pembaruan tersebut dipertahankan. Mulai versi ini, tiap sesi memilih 100 dari seluruh katalog secara acak, tanpa pembobotan peringkat pengiriman.
 
 ## Referensi
 

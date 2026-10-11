@@ -1,4 +1,6 @@
 // Kode dan nama: terbaru.xlt.xls, Sheet1 kolom A–B, diperbarui 10 Oktober 2026.
+// Daftar boleh lebih dari 100 produk; aplikasi memilih 100 kode berbeda per sesi.
+// Tambahkan produk di array ini. Kode wajib teks 5 digit dan tidak boleh duplikat.
 (function(root){const products=[
   {
     "code": "05001",
